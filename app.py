@@ -30,7 +30,7 @@ def ys(rhs: sp.Expr) -> np.ndarray:
 def latex(rhs: sp.Expr) -> str:
     return sp.latex(sp.Eq(y, rhs))
 
-data = [{"x": xs, "y": ys(rhs), "name": "hello"} for rhs in rhss]
+data = [{"x": xs, "y": ys(rhs), "name": str(rhs)} for rhs in rhss]
 
 with col1:
     st.markdown("**Equation(s):**")
