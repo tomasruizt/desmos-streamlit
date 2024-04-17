@@ -1,50 +1,43 @@
 import numpy as np
 import streamlit as st
 import sympy as sp
-from sympy.abc import x, y
+from sympy.abc import x
 
 st.title("My Desmos Calculator")
 
 col1, col2 = st.columns([2, 5])
 
-def get_rhs(expression: str) -> sp.Expr:
+
+with col1:
+    st.subheader("Input")
+    exp1: str = st.text_input("Expression for y", "exp(-x**2)", key="1")
+    exp2: str = st.text_input("Expression for y", "x**2", key="2")
     try:
-        return sp.parse_expr(expression)
+        rhs1 = sp.parse_expr(exp1)
+        rhs2 = sp.parse_expr(exp2)
     except:
         st.error("Invalid expression")
         st.stop()
 
-with col1:
-    st.subheader("Input")
-    n_eqs = st.number_input("Number of equations", min_value=1)
-    exps = [st.text_input("Expression for y", "x**2", key=i) for i in range(n_eqs)]
-    rhss = [get_rhs(exp) for exp in exps]
+    st.markdown("**Equation(s):**")
+    st.write(f"$${sp.latex(rhs1)}$$")
+    st.write(f"$${sp.latex(rhs2)}$$")
 
-
-xs = np.linspace(-3, 3, 100)
+xs = np.linspace(-2, 2, 100)
 
 def ys(rhs: sp.Expr) -> np.ndarray:
     y_fn = sp.lambdify(x, rhs, ["numpy", "sympy"])
     return y_fn(xs)
 
-def latex(rhs: sp.Expr) -> str:
-    return sp.latex(sp.Eq(y, rhs))
-
-data = [{"x": xs, "y": ys(rhs), "name": str(rhs)} for rhs in rhss]
-
-with col1:
-    st.markdown("**Equation(s):**")
-    for rhs in rhss:
-        st.write(f"$${latex(rhs)}$$")
-
 with col2:
     st.plotly_chart(
         {
-            "data": data,
+            "data": [
+                {"x": xs, "y": ys(rhs1), "name": str(rhs1)},
+                {"x": xs, "y": ys(rhs2), "name": str(rhs2)},
+            ],
             "layout": {
-                "title": "Equations",
-                "xaxis": {"title": "x"},
-                "yaxis": {"title": "y"},
+                "title": "Equations"
             },
         },
         use_container_width=True,
