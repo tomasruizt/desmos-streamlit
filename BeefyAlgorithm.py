@@ -9,5 +9,5 @@ import streamlit as st
 def beefy_algorithm(date: date) -> pd.DataFrame:
     time.sleep(5)
     dates = pd.date_range(date, periods=3)
-    values = np.arange(3)
+    values = np.arange(3) ** 2
     return pd.DataFrame({"date": dates, "value": values})
