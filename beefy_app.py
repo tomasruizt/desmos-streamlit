@@ -11,5 +11,5 @@ btn_pressed: bool = st.button('Run Beefy Algorithm')
 if btn_pressed:
     with st.spinner("Computing..."):
         df = beefy_algorithm(a_date)
-    st.subheader('A Dataframe')
+    st.subheader('Results:')
     st.write(df.head())
